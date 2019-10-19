@@ -13,22 +13,11 @@ const app = next({ dev })
 const handler = routes.getRequestHandler(app)
 
 app.prepare().then(() => {
+  const PORT = process.env.PORT || 3000
   createServer((req, res) => {
-    const { pathname } = parse(req.url, true)
-    if (pathname === '/') {
-      const locale = 'ru'
-      res.setHeader(
-        'Cache-Control',
-        'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0'
-      )
-      // TODO include query here, now it's being reset
-      res.writeHead(302, { Location: `/${locale}` })
-      res.end()
-      return
-    }
     handler(req, res)
-  }).listen(3000, err => {
+  }).listen(PORT, err => {
     if (err) throw err
-    console.log('> Read on http://localhost:3000')
+    console.log(`> Read on http://localhost:${PORT}`)
   })
 })
